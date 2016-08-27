@@ -58,7 +58,12 @@ int main(int argc, char* argv[])
 			lpr--;
 		}
 		else if (op == INS)
+		{
 			str.insert(lpr, 1, patch[contd ? i : i+1]);
+			lpr++;
+			if (!contd)
+				i++;
+		}
 	}
 	cout << str << endl;
 	return 0;
