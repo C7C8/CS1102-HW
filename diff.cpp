@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 				contd = true;
 				break; //is this needed?
 		}
-		cout << "op " << op << endl << endl;
+		cout << "op " << op << "; contd " << contd << endl << endl;
 
 		//Use if/else syntax here, a switch statement could be a bit more syntactically hairy.
 		if (op == RPL)
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 		}
 		else if (op == DEL)
 		{
-			str.erase(lpr,lpr);
+			str.erase(lpr, 1);
 			lpr--;
 		}
 		else if (op == INS)
