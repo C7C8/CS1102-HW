@@ -20,7 +20,7 @@
 ;	-Result:	'Use jabs over spaces"
 ;
 ; [3] Delete (DEL): -
-;	-Deletes a character, in-place
+;	-Deletes a character, in-place. LPR stays in place.
 ;	-Example:	"PRESS THE BUTTON!"
 ;	-Diff:		"\\\\\\\\\\\--\-\\"
 ;	-Result:	"PRESS THE BTN!"
