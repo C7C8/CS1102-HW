@@ -7,6 +7,16 @@ using std::string;
 
 int main(int argc, char* argv[])
 {
+	/*
+	* Simple patch program.
+	*
+	* Works by first identifying an operator, then applying it to the string.
+	* If the nxet character after an operator arg is another character (eg.
+	* a letter, the previous operation is applied, eliminating operator
+	* redundancy.
+	*
+	*/
+
 	if (argc < 3)
 	{
 		cerr << "Not enough arguments!" << endl;
@@ -15,17 +25,12 @@ int main(int argc, char* argv[])
 	
 	//str1 is the original, patch is the patch to apply
 	string str(argv[1]), patch(argv[2]);
-	cout << "Applying patch \"" << patch << "\" to string \"" << str << "\"..." << endl;
 	enum {NOP, INS, DEL, RPL, LTR} op = NOP;
-	for (int i = 0, lpr = 0; i < patch.size() && lpr < str.size(); i++, lpr++) //TODO: Clean up for loop
+	for (int i = 0, lpr = 0; i < patch.size() && lpr < str.size(); i++, lpr++)
 	{
-		cout << "lpr " << lpr << "; i " << i << "; str \"" << str << "\"" << endl;;
-		cout << "str[lpr] " << str[lpr] << "; patch[i] " << patch[i] << endl;
-
-		//Get current operation, then apply it for however long is necessary. 
 		//i=patch, lpr=str
 		bool contd = false;
-		switch(patch[i])
+		switch(patch[i]) //Get current operation, or detect a continuation
 		{
 			case '/':
 				op = NOP;
@@ -45,7 +50,7 @@ int main(int argc, char* argv[])
 		}
 		cout << "op " << op << "; contd " << contd << endl << endl;
 
-		//Use if/else syntax here, a switch statement could be a bit more syntactically hairy.
+		//Uses if/else syntax here because a switch statement could be a bit more syntactically hairy.
 		if (op == RPL)
 		{
 			str[lpr] = patch[contd ? i : i + 1];
