@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	for (int i = 0, lpr = 0; i < patch.size() && lpr < str.size(); i++, lpr++) //TODO: Clean up for loop
 	{
 		cout << "lpr " << lpr << "; i " << i << "; str \"" << str << "\"" << endl;;
-		cout << "str[lpr] " << str[lpr] << "; patch[i] " << patch[i] << endl << endl;
+		cout << "str[lpr] " << str[lpr] << "; patch[i] " << patch[i] << endl;
 
 		//Get current operation, then apply it for however long is necessary. 
 		//i=patch, lpr=str
@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
 		{
 			case '/':
 				op = NOP;
-				lpr++;
 				continue; //No need to break, nops are skipped
 			case '=':
 				op = RPL;
@@ -44,14 +43,20 @@ int main(int argc, char* argv[])
 				contd = true;
 				break; //is this needed?
 		}
-		
+		cout << "op " << op << endl << endl;
+
 		//Use if/else syntax here, a switch statement could be a bit more syntactically hairy.
 		if (op == RPL)
 		{
 			str[lpr] = patch[contd ? i : i + 1];
+			if (!contd)
+				i++;
 		}
 		else if (op == DEL)
+		{
 			str.erase(lpr,lpr);
+			lpr--;
+		}
 		else if (op == INS)
 			str.insert(lpr, 1, patch[contd ? i : i+1]);
 	}
