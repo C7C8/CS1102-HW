@@ -48,7 +48,6 @@ int main(int argc, char* argv[])
 				contd = true;
 				break; //is this needed?
 		}
-		cout << "op " << op << "; contd " << contd << endl << endl;
 
 		//Uses if/else syntax here because a switch statement could be a bit more syntactically hairy.
 		if (op == RPL)
