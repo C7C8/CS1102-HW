@@ -5,7 +5,7 @@
 ; I'll fix it later, right now I have code to write!
 ; 
 ; Proposed diff syntax:
-; [0] NOP: \
+; [0] NOP: /
 ;	-No operation. Only increments the location pointer by one.
 ; [1] Insert (INS): +
 ; 	-Inserts in place, *before* the currently selected character.
@@ -33,19 +33,4 @@
 ;	-Diff:		"\\\\\\=DO---\\\\"
 ;	-Result:	"DON'T DO IT!"
 ;
-; [5] Location pointer (lpr)
-;	-Construct that exists in memory only, for operations on a string.
-;	-NOP (\)
-;		-Advances lpr by one in all cases.
-;	-RPL (=)
-;		-Advances lpr by one in all cases.
-;	-DEL (-)
-;		-When applying a patch, decrements lpr
-;		-When creating a patch, increments lpr
-;	-INS (+)
-;		-When applying a patch, increments lpr by 2 (???)
-;		-When creating a patch... increments lpr by two?
-;
-; Obviously all of the above is very much a work in progress
-
 
