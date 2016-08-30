@@ -12,6 +12,13 @@
 ;(define (apply-op op str)
 ;	()) ; TODO: Implement
 
+;;Delete: number number string -> string
+;;Consumes a starting position, an amount to delete and the string to delete from
+;;Produces a string with specified deleted portion via starting position and deleted amount
+(check-expect (delete 2 2 "apples") "apes")
+(check-expect (delete 1 5 "0123456") "06")
+(define (delete position num str)
+	(string-append (substring str 0 position) (substring str (+ position num))))
 
 ; insert, inserts a substring at a position
 ; number string string -> string
