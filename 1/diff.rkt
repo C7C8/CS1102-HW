@@ -48,7 +48,6 @@
 
 ;; apply-patch: patch string -> string
 ;; Consumes an patch and a string, returns a patched string
-;; Test cases (see above defines for patches)
 (check-expect (apply-patch patch-ins-ex "We are not programmers.") "We are not lazy programmers.")
 (check-expect (apply-patch patch-del-ex "I don't have other example sentences.") "I don't have example sentences.")
 (define (apply-patch patch str)
@@ -67,6 +66,67 @@
 		[(insert? op)
 			(str-insert position str (insert-str op))]))
 			
+
+;; overlap? patch patch -> boolean
+;; Consumes two patches and returns a boolean whose value depends on whether there's an overlap or not
+;; Overlaps are defined as 
+;; 1. Two insertions that start at the same location, 
+;; 2. Two deletions whose ranges overlap,
+;; 3. An insertion that starts within the range of a deletion (unless they start at the same location.
+(check-expect (overlap? patch-ins-ex patch-ins-ex) #T)
+(check-expect (overlap? patch-del-ex patch-del-ex) #T)
+(check-expect (overlap? patch-del-ex patch-ins-ex) #F)
+(define (overlap? patch1 patch2) 
+	(cond
+		[(and (delete? (patch-op patch1)) (delete? (patch-op patch2))) 
+			(delete-overlap? patch1 patch2)]
+		[(and (insert? (patch-op patch1)) (insert? (patch-op patch2)))
+			(insert-overlap? patch1 patch2)]
+		[else
+			(ins-del-overlap? patch1 patch2)]))
+
+
+;; insert-overlap? patch patch -> boolean
+;; Consumes two patches and returns true if they start at the same location, false otherwise.
+(check-expect (insert-overlap? (make-patch (make-insert "Hello ") 1) (make-patch (make-insert "world!") 1)) #T)
+(check-expect (insert-overlap? (make-patch (make-insert "Hello ") 1) (make-patch (make-insert "world!") 9)) #F)
+(define (insert-overlap? patch1 patch2)
+	(= (patch-pos patch1) (patch-pos patch2)))
+
+;; delete-overlap? patch patch -> boolean
+;; Consumes two deletion patches and returns true if they overlap, false otherwise.
+(check-expect (delete-overlap? (make-patch (make-delete 3) 1) (make-patch (make-delete 4) 2)) #T)
+(check-expect (delete-overlap? (make-patch (make-delete 3) 1) (make-patch (make-delete 5) 999)) #F)
+(define (delete-overlap? patch1 patch2)
+	(not (or ;;original tested for no conflicts, not negates this
+		(< (patch-end patch1) (patch-pos patch2))	;; patch1-end < patch2-start
+		(> (patch-pos patch1) (patch-end patch2)))))	;; patch1-start > patch2-end
+
+;; ins-del-overlap? patch(insert) patch(delete) -> boolean
+;; Consumes two patches and returns true if the insert start is inside the range of the deletion, false otherwise. 
+(check-expect (ins-del-overlap? (make-patch (make-delete 9) 1) (make-patch (make-insert "Go away test case!") 3)) #T)
+(check-expect (ins-del-overlap? (make-patch (make-insert "Go away test case!") 3) (make-patch (make-delete 9) 99)) #F)
+(define (ins-del-overlap? patch1 patch2)
+	(cond 
+		[(insert? (patch-op patch1))
+			(and 
+				(> (patch-pos patch1) (patch-pos patch2))	;; delete-start < insert-start <= delete-end
+				(<= (patch-pos patch1) (patch-end patch2)))]
+		[else
+			(and 
+				(> (patch-pos patch2) (patch-pos patch1))	;; delete-start < insert-start <= delete-end
+				(<= (patch-pos patch2) (patch-end patch1)))]))
+
+
+;; patch-end patch -> number
+;; Consumes a patch, returns the end point of that patch
+(check-expect (patch-end (make-patch (make-insert "Hello, world!") 3)) 16)
+(check-expect (patch-end (make-patch (make-delete 3) 1)) 4)
+(define (patch-end patch)
+	(+ (patch-pos patch) (cond 
+		[(delete? (patch-op patch)) (delete-len (patch-op patch))]
+		[(insert? (patch-op patch)) (string-length (insert-str (patch-op patch)))])))
+
 
 ;; Delete: number number string -> string
 ;; Consumes a starting position, an amount to delete and the string to delete from
