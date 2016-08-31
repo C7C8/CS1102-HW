@@ -2,8 +2,6 @@
 #lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
 
-;;THERE ARE MORE LINES OF ***COMMENTS*** HERE THAN THERE ARE LINES OF CODE!
-
 ;; A delete is (make-delete number)
 (define-struct delete (len))
 ;; Template:
@@ -112,6 +110,15 @@
 				(apply-patch patch1 (apply-patch patch2 str))])))
 
 
+;; modernize: string -> string
+;; Consumes a string and applies a series of patches to modernize it. Intended to
+;; operate on either a sequence from "Hamlet"
+(check-expect (modernize hamlet-str) hamlet-str-modern)
+(define (modernize str)
+	(patch-walker modernize-patchlist str))
+
+
+;;Data for the modernize function
 (define hamlet-str "Hamlet: Do you see yonder cloud that's almost in shape of a camel? Polonius: By the mass, and 'tis like a camel, indeed. Hamlet: Methinks it is like a weasel. Polonius: It is backed like a weasel. Hamlet: Or like a whale? Polonius: Very like a whale.\n\n\n")
 (define hamlet-str-modern "Hamlet: Do you see the cloud over there that's almost the shape of a camel? Polonius: By golly, it is like a camel, indeed. Hamlet: I think it looks like a weasel. Polonius: It is shaped like a weasel. Hamlet: Or like a whale? Polonius: It's totally like a whale.\n\n\n")
 (define modernize-patchlist 	(cons (make-patch (make-delete 4) 232)
@@ -131,16 +138,6 @@
 				empty)))))))))))))))
 
 
-
-
-;; modernize: string -> string
-;; Consumes a string and applies a series of patches to modernize it. Intended to
-;; operate on either a sequence from "Hamlet"
-(check-expect (modernize hamlet-str) hamlet-str-modern)
-(define (modernize str)
-	(patch-walker modernize-patchlist str))
-
-
 ;; ================
 ;; HELPER FUNCTIONS
 ;; ================
@@ -148,6 +145,8 @@
 
 ;; patch-walker: list of patches, string -> string
 ;; Takes a list of patches, recursively applies them
+(check-expect (patch-walker (cons (make-patch (make-delete 1) 8) (cons (make-patch (make-insert "9") 8) empty)) "0123456789") "0123456799")
+(check-expect (patch-walker (cons (make-patch (make-delete 1) 1) (cons (make-patch (make-insert "2") 1) empty)) "0123456789") "0223456789")
 (define (patch-walker patchlist str)
 	(cond
 		[(empty? patchlist) str]
