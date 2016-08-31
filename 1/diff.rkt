@@ -1,9 +1,11 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname diff) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #t)))
 #!/usr/bin/racket
 ;;#lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
+
+;;
+;; File by Michael Krebs and Christopher Myers
+;; 2016-9-1
+;;
 
 ;; A delete is (make-delete number)
 (define-struct delete (len))
@@ -220,53 +222,55 @@
 
 ;;(test) ;; Run check-expect tests. Not needed if DrRacket is configured in "Beginning Student" mode.
 
-#|
-  7.The advantages to returning false instead of the original string in the case where
-there is an overlap of two patches is that immediately one can know that the patches overlapped
-and didn't instead have a minor error like an index issue. This saves the coder the
-time of searching through the returned string looking for a patch that failed to be
-performed correctly when none of the patches were performed at all. 
 
-============
-Evaluations:
-============
-8.(/ (- (* 9 3) (double 'a)) 2) where double is defined as (define (double n) (* n 2))
+;  7.The advantages to returning false instead of the original string in the case where
+; there is an overlap of two patches is that immediately one can know that the patches overlapped
+; and didn't instead have a minor error like an index issue. This saves the coder the
+; time of searching through the returned string looking for a patch that failed to be
+; performed correctly when none of the patches were performed at all. 
+;
+; 8.(/ (- (* 9 3) (double 'a)) 2) where double is defined as (define (double n) (* n 2))
+;
+; =(/ (- (27) (double 'a)) 2)
+;
+; =(/ (- (27) (* a' 2)) 2)
+;
+; = Error: double n suspected a number but what given a'. They cannot be multiplied together
+;
+;
+; 9.(or (< 5 2) (and (= 15 (- 18 3)) (> 8 4)))
+;
+; =(or (false) (and (= 15 (- 18 3)) (> 8 4)))
+;
+; =(or (false) (and (= 15 (15)) (> 8 4)))
+;
+; =(or (false) (and (true) (> 8 4)))
+;
+; =(or (false) (and (true) (true)))
+;
+; =(or (false) (true))
+;
+; = true
+;
+;
+; 10.(and (+ 5 -1) false)
+;
+;  =(and (4) false)
+;
+;  = Error: and returns a boolean and since 4 is neither an and or else the and cannot be evaluated
+;
+; 11.(apply-patch 'remove "this is a test string") [use your own apply-patch program from this assignment]
+;
+;  = Error: apply-patch requires (patch string) as arguments but was given (symbol string).
+;    Our program doesn't use symbols to create an operation, only make-insert and make-delete do.
+;
+;
+; 12. Code that produces this error would be anything with an incomplete cond; there's a test but no action after that.
+;	Example: (cond #T)
+; 
+; 13. A variable-undefined error is generated when a variable used in a function doesn't actually exist.
+;	Example: (+ x 1)
+;
+; 14. This error would be generated if you used a number after an open paren, but that number wasn't a function.
+;	Example: (4)
 
-=(/ (- (27) (double 'a)) 2)
-
-=(/ (- (27) (* a' 2)) 2)
-
-= Error: double n suspected a number but what given a'. They cannot be multiplied together
-
-9.(or (< 5 2) (and (= 15 (- 18 3)) (> 8 4)))
-
-=(or (false) (and (= 15 (- 18 3)) (> 8 4)))
-
-=(or (false) (and (= 15 (15)) (> 8 4)))
-
-=(or (false) (and (true) (> 8 4)))
-
-=(or (false) (and (true) (true)))
-
-=(or (false) (true))
-
-= true
-
-
-10.(and (+ 5 -1) false)
-
-=(and (4) false)
-
-= Error: and returns a boolean and since 4 is neither an and or else the and cannot be evaluated
-
-11.(apply-patch 'remove "this is a test string") [use your own apply-patch program from this assignment]
-
-= Error: apply-patch requires (patch string) as arguments but was given (symbol string).
-    Our program doesn't use symbols to create an operation, only make-insert and make-delete do.
-
-===============
-Error Messages:
-===============
-
-
-|#
