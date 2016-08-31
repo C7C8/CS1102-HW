@@ -86,6 +86,36 @@
 			(ins-del-overlap? patch1 patch2)]))
 
 
+;; merge? patch patch string -> string OR boolean (input dependent)
+;; Consumes two patches and a string. Applies them to the string and returns the result, otherwise returns false if
+;; the patches overlap.
+(check-expect (merge (make-patch (make-insert "-2-") 3) (make-patch (make-insert "-0-") 5) "01234567890") "012-2-34-0-567890")
+(check-expect (merge (make-patch (make-insert "-0-") 5) (make-patch (make-insert "-2-") 3) "01234567890") "012-2-34-0-567890")
+(check-expect (merge (make-patch (make-delete 3) 3) (make-patch (make-delete 3) 7) "01234567890") "01260")
+(check-expect (merge (make-patch (make-delete 3) 7) (make-patch (make-delete 3) 3) "01234567890") "01260")
+(check-expect (merge (make-patch (make-insert "-2-") 7) (make-patch (make-delete 3) 3) "01234567890") "0126789-2-0")
+(check-expect (merge (make-patch (make-delete 3) 3) (make-patch (make-insert "-2-") 7) "01234567890") "0126789-2-0")
+(check-expect (merge (make-patch (make-delete 3) 3) (make-patch (make-insert "-2-") 3) "01234567890") "012-2-67890") ;; Insertion starting at a deletion
+(check-expect (merge (make-patch (make-insert "-2-") 3) (make-patch (make-delete 3) 3) "01234567890") "012-2-67890") ;; <- ditto
+(check-expect (merge patch-ins-ex patch-ins-ex "This will return false!") #F)
+(define (merge patch1 patch2 str)
+	(if (overlap? patch1 patch2)
+		#F
+		(cond 
+			[(and (delete? (patch-op patch1)) (insert? (patch-op patch2)))	;; Apply deletions FIRST
+				(apply-patch patch2 (apply-patch patch1 str))]
+			[(and (insert? (patch-op patch1)) (delete? (patch-op patch2)))
+				(apply-patch patch1 (apply-patch patch2 str))]
+			[(>= (patch-pos patch1) (patch-pos patch2))
+				(apply-patch patch2 (apply-patch patch1 str))]
+			[else
+				(apply-patch patch1 (apply-patch patch2 str))])))
+
+
+;; ================
+;; HELPER FUNCTIONS
+;; ================
+
 ;; insert-overlap? patch patch -> boolean
 ;; Consumes two patches and returns true if they start at the same location, false otherwise.
 (check-expect (insert-overlap? (make-patch (make-insert "Hello ") 1) (make-patch (make-insert "world!") 1)) #T)
