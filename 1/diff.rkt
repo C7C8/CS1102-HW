@@ -112,9 +112,47 @@
 				(apply-patch patch1 (apply-patch patch2 str))])))
 
 
+(define hamlet-str "Hamlet: Do you see yonder cloud that's almost in shape of a camel? Polonius: By the mass, and 'tis like a camel, indeed. Hamlet: Methinks it is like a weasel. Polonius: It is backed like a weasel. Hamlet: Or like a whale? Polonius: Very like a whale.\n\n\n")
+(define hamlet-str-modern "Hamlet: Do you see the cloud over there that's almost the shape of a camel? Polonius: By golly, it is like a camel, indeed. Hamlet: I think it looks like a weasel. Polonius: It is shaped like a weasel. Hamlet: Or like a whale? Polonius: It's totally like a whale.\n\n\n")
+(define modernize-patchlist 	(cons (make-patch (make-delete 4) 232)
+				(cons (make-patch (make-insert "It's totally") 232)
+				(cons (make-patch (make-delete 6) 175)
+				(cons (make-patch (make-insert "shaped") 175)
+				(cons (make-patch (make-delete 14) 129)
+				(cons (make-patch (make-insert "I think it looks") 129)
+				(cons (make-patch (make-delete 8) 90)
+				(cons (make-patch (make-insert "it is") 90)
+				(cons (make-patch (make-delete 8) 80)
+				(cons (make-patch (make-insert "golly") 80)
+				(cons (make-patch (make-delete 2) 46)
+				(cons (make-patch (make-insert "the") 46)
+				(cons (make-patch (make-delete 19) 19)
+				(cons (make-patch (make-insert "the cloud over there that's") 19) ;;parens incoming
+				empty)))))))))))))))
+
+
+
+
+;; modernize: string -> string
+;; Consumes a string and applies a series of patches to modernize it. Intended to
+;; operate on either a sequence from "Hamlet"
+(check-expect (modernize hamlet-str) hamlet-str-modern)
+(define (modernize str)
+	(patch-walker modernize-patchlist str))
+
+
 ;; ================
 ;; HELPER FUNCTIONS
 ;; ================
+
+
+;; patch-walker: list of patches, string -> string
+;; Takes a list of patches, recursively applies them
+(define (patch-walker patchlist str)
+	(cond
+		[(empty? patchlist) str]
+		[else (patch-walker (rest patchlist) (apply-patch (first patchlist) str))]))
+
 
 ;; insert-overlap? patch patch -> boolean
 ;; Consumes two patches and returns true if they start at the same location, false otherwise.
