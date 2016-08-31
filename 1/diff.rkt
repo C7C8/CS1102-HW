@@ -49,7 +49,7 @@
 (check-expect (apply-patch patch-ins-ex "We are not programmers.") "We are not lazy programmers.")
 (check-expect (apply-patch patch-del-ex "I don't have other example sentences.") "I don't have example sentences.")
 (define (apply-patch patch str)
-	(apply-op (patch-op patch) (patch-pos patch) str)) ;;honestly I'm not sure why this function exists
+	(apply-op (patch-op patch) (patch-pos patch) str))
 
 
 ;; apply-op: operation number string -> string
@@ -65,7 +65,7 @@
 			(str-insert position str (insert-str op))]))
 			
 
-;; overlap? patch patch -> boolean
+;; overlap?: patch patch -> boolean
 ;; Consumes two patches and returns a boolean whose value depends on whether there's an overlap or not
 ;; Overlaps are defined as 
 ;; 1. Two insertions that start at the same location, 
@@ -84,7 +84,7 @@
 			(ins-del-overlap? patch1 patch2)]))
 
 
-;; merge? patch patch string -> string OR boolean (input dependent)
+;; merge?: patch patch string -> string OR boolean (input dependent)
 ;; Consumes two patches and a string. Applies them to the string and returns the result, otherwise returns false if
 ;; the patches overlap.
 (check-expect (merge (make-patch (make-insert "-2-") 3) (make-patch (make-insert "-0-") 5) "01234567890") "012-2-34-0-567890")
@@ -153,14 +153,14 @@
 		[else (patch-walker (rest patchlist) (apply-patch (first patchlist) str))]))
 
 
-;; insert-overlap? patch patch -> boolean
+;; insert-overlap?: patch patch -> boolean
 ;; Consumes two patches and returns true if they start at the same location, false otherwise.
 (check-expect (insert-overlap? (make-patch (make-insert "Hello ") 1) (make-patch (make-insert "world!") 1)) #T)
 (check-expect (insert-overlap? (make-patch (make-insert "Hello ") 1) (make-patch (make-insert "world!") 9)) #F)
 (define (insert-overlap? patch1 patch2)
 	(= (patch-pos patch1) (patch-pos patch2)))
 
-;; delete-overlap? patch patch -> boolean
+;; delete-overlap?: patch patch -> boolean
 ;; Consumes two deletion patches and returns true if they overlap, false otherwise.
 (check-expect (delete-overlap? (make-patch (make-delete 3) 1) (make-patch (make-delete 4) 2)) #T)
 (check-expect (delete-overlap? (make-patch (make-delete 3) 1) (make-patch (make-delete 5) 999)) #F)
@@ -169,8 +169,9 @@
 		(< (patch-end patch1) (patch-pos patch2))	;; patch1-end < patch2-start
 		(> (patch-pos patch1) (patch-end patch2)))))	;; patch1-start > patch2-end
 
-;; ins-del-overlap? patch(insert) patch(delete) -> boolean
-;; Consumes two patches and returns true if the insert start is inside the range of the deletion, false otherwise. 
+;; ins-del-overlap?: patch(insert) patch(delete) -> boolean
+;; Consumes two patches and returns true if the insert start is inside the range of the deletion, false otherwise.
+;; Hence, "insert-delete-overlap"
 (check-expect (ins-del-overlap? (make-patch (make-delete 9) 1) (make-patch (make-insert "Go away test case!") 3)) #T)
 (check-expect (ins-del-overlap? (make-patch (make-insert "Go away test case!") 3) (make-patch (make-delete 9) 99)) #F)
 (define (ins-del-overlap? patch1 patch2)
@@ -185,7 +186,7 @@
 				(<= (patch-pos patch2) (patch-end patch1)))]))
 
 
-;; patch-end patch -> number
+;; patch-end patch: -> number
 ;; Consumes a patch, returns the end point of that patch
 (check-expect (patch-end (make-patch (make-insert "Hello, world!") 3)) 16)
 (check-expect (patch-end (make-patch (make-delete 3) 1)) 4)
@@ -195,7 +196,7 @@
 		[(insert? (patch-op patch)) (string-length (insert-str (patch-op patch)))])))
 
 
-;; Delete: number number string -> string
+;; str-delete: number number string -> string
 ;; Consumes a starting position, an amount to delete and the string to delete from
 ;; Produces a string with specified deleted portion via starting position and deleted amount
 (check-expect (str-delete 2 2 "apples") "apes")
@@ -204,7 +205,7 @@
 	(string-append (substring str 0 position) (substring str (+ position num))))
 
 
-;; number string string -> string
+;; str-insert: number string string -> string
 ;; Consumes a position, a string, and a substring. Inserts substr at position in str, returning the result.
 (check-expect (str-insert 4 "The fox" "quick brown " ) "The quick brown fox")
 (check-expect (str-insert 14 "jumps over the dog." " lazy") "jumps over the lazy dog.")
