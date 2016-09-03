@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+project(FireGame)
+file(GLOB_RECURSE HydraSources Hydra-Engine/*.cpp Hydra-Engine/*.h)
+file(GLOB_RECURSE FireSources firegame.cpp)
+add_executable(FireGame ${FireSources} ${HydraSources})
