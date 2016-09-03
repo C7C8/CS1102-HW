@@ -4,6 +4,8 @@ using namespace Hydra;
 
 #define WSIZE_X 800
 #define WSIZE_Y 600
+#define FPS_TIME 1000 / 60
+#define PLANE_SPEED 4
 
 int main (int argc, char* argv[])
 {
@@ -20,13 +22,41 @@ int main (int argc, char* argv[])
 	tmanage->loadTexture("sm-fire.gif", "sm-fire");
 	Texture plane = tmanage->getTexture("plane");
 	plane.setX(WSIZE_X / 2);
-	plane.setY(WSIZE_Y / 2);
+	plane.setY(100);
+	
+	bool quit = false;
+	Timer fpsTimer(FPS_TIME);
+	while (!quit)
+	{	
+		fpsTimer.reset();
+		fpsTimer.start(); 
 
-	Timer pauseTimer(5000); //ms?
-	engine->queueTexture(plane);
-	engine->renderAll();
-	pauseTimer.start();
-	while (!pauseTimer.hasIntervalPassed());
+		//Event loop
+		SDL_Event e;
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_QUIT)
+				quit = true;
+			if (e.type == SDL_KEYDOWN)
+			{
+				switch (e.key.keysym.sym)
+				{
+					case SDLK_RIGHT:
+						plane.setX(plane.getX() + PLANE_SPEED);
+						break;
+					case SDLK_LEFT:
+						plane.setX(plane.getX() - PLANE_SPEED);
+						break;
+				}
+			}
+		}
+
+		engine->queueTexture(plane);
+		while (!fpsTimer.hasIntervalPassed()); //wait
+		engine->renderAll();
+	}
+	
+
 	
 	
 	engine->shutdown();
