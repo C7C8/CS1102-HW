@@ -327,7 +327,7 @@
 255 255 -1 -1 0 1 #"\0"
 0 -1 1 #"\0"
 1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
-0 -1           0 2742 0 4 3 85
+0 -1           0 2737 0 4 3 85
 (
  #";; The first three lines of this file were inserted by DrRacket. The"
  #"y record metadata"
@@ -2806,8 +2806,6 @@
  #";; Consumes world and draws a scene. Basically just a graphics updat"
  #"e function."
 ) 0 0 24 29 1 #"\n"
-0 0 17 3 23 #";; TODO: Check expects?"
-0 0 24 29 1 #"\n"
 0 0 24 3 1 #"("
 0 0 15 3 6 #"define"
 0 0 24 3 2 #" ("
@@ -2874,7 +2872,8 @@
 0 0 24 3 1 #" "
 0 0 14 3 6 #"HEIGHT"
 0 0 24 3 1 #" "
-0 0 19 3 7 #"\"black\""
+0 0 19 3 6 #"\"white"
+0 0 19 3 1 #"\""
 0 0 24 3 4 #"))) "
 0 0 24 29 1 #"\n"
 0 0 24 29 1 #"\n"
@@ -3055,13 +3054,6 @@
 0 0 24 29 1 #"\n"
 0 0 17 3 63
 #";; Consumes a world, produces a new world with updates applied."
-0 0 24 29 1 #"\n"
-0 0 17 3 78
-(
- #";; This one is mysteriously different from the above else clause! Fa"
- #"scinating!"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 24 #";; TODO: Fix... I think?"
 0 0 24 29 1 #"\n"
 0 0 24 3 1 #"("
 0 0 15 3 6 #"define"
