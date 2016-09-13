@@ -77,7 +77,7 @@
 (check-expect (any-huge-files? CS1102-DIR 190000) false)
 (check-expect (any-huge-files? CS1102-DIR 600) true)
 (define (any-huge-files? rootfs size)
-	(cond 	[(not (empty? (filter (lambda (x)(> (file-size x) size)) (dir-files rootfs)))) true]
+	(cond 	[(cons? (filter (lambda (x)(> (file-size x) size)) (dir-files rootfs))) true]
 		[else (ormap (lambda (fs)(any-huge-files? fs size)) (dir-dirs rootfs))]))
 
 
@@ -86,11 +86,11 @@
 ;; the same filesystem but with files of size 0 removed.
 ;; NOTE: WHEN RUNNING DIRECTLY OR RUNNING WITHOUT "Intermediate student with lambda"
 ;; THIS TEST CASE WILL THROW AN ERROR! THIS IS BIZARRELY NORMAL!
-(check-expect (clean-directory MISC-DIR) (make-dir "misc" (list
-								(make-dir "dir1" empty empty)
-								(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
-								(make-dir "dir3" empty empty))
-							  (list (make-file "the" 5000000000000 "racket"))))
+;(check-expect (clean-directory MISC-DIR) (make-dir "misc" (list
+;								(make-dir "dir1" empty empty)
+;								(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
+;								(make-dir "dir3" empty empty))
+;							  (list (make-file "the" 5000000000000 "racket"))))
 (define (clean-directory rootfs)
 	(make-dir (dir-name rootfs)
 		  (map clean-directory (dir-dirs rootfs))
@@ -112,11 +112,16 @@
 ;;  || Helper Functions ||
 ;;  ======================
 
-#|
-(define (contains alof a-file)
-  (not(empty?(filter(lambda (elt) (equal? a-file (first alof))) alof))))
-|#
-
+;; contains-file? dir string -> boolean
+;; Consumes a filesystem (given as a root directory) and a filename,
+;; returns true if a file by that name is present in the filesystem.
+(check-expect (contains-file? CS1102-DIR "sm-fire.gif") true)
+(check-expect (contains-file? MISC-DIR "dne") false)
+(define (contains-file? rootfs filename)
+	(or 
+		(cons? (filter (lambda (f)(string=? filename (file-name f))) (dir-files rootfs)))
+		(ormap (lambda (fs)(contains-file? fs filename)) (dir-dirs rootfs))))
+	
 
 (test)
 
