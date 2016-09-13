@@ -58,6 +58,15 @@
 			(make-dir "3-Filesystem" empty (list
 							(make-file "hwk3.rkt" 666 "NO WAIT DON'T RECURSE THAT DEEP-*boom*"))))
 					empty))
+(define MISC-DIR (make-dir "misc" (list
+					(make-dir "dir1" empty empty)
+					(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
+					(make-dir "dir3" empty empty))
+				  (list
+				  	(make-file "the" 5000000000000 "racket")
+					(make-file "-based" 5 "filesystem!")
+					(make-file "...Use" 4 "btrfs")
+					(make-file "instead!" 3 "nope."))))
 
 ;;  =======================
 ;;  || PRIMARY FUNCTIONS ||
