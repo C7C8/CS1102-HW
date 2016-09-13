@@ -1,6 +1,3 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname hwk3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 #!/usr/bin/racket
 #lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
@@ -45,7 +42,7 @@
 			(make-file "Class 2" 5000000 "Class 2 notebook...")
 			(make-file "CS 1102" 4999999 "((((([CS 1102])))))"))))
 (define CS1102-DIR (make-dir "CS 1102" (list
-			(make-dir "1-Diff" (list (make-file "diff.rkt" 12000 "WE'RE DYING UNDER PARENS")) empty)
+			(make-dir "1-Diff" empty (list (make-file "diff.rkt" 12000 "WE'RE DYING UNDER PARENS")))
 			(make-dir "2-Firegame" 	(list
 							(make-dir "build" empty empty)
 							(make-dir "Hydra-Engine" empty empty))	;;Hail Hydra!
@@ -73,6 +70,23 @@
 ;;  =======================
 
 
+;; any-huge-files? dir number -> boolean
+;; Consumes a filesystem (starting at the given root directory, returns true
+;; if there are files within it that exceed the given size.
+(check-expect (any-huge-files? MISC-DIR 5000) true)
+(check-expect (any-huge-files? CS1102-DIR 190000) false)
+(check-expect (any-huge-files? CS1102-DIR 600) true)
+(define (any-huge-files? rootfs size)
+	(cond 	[(not (empty? (filter (lambda (x)(> (file-size x) size)) (dir-files rootfs)))) true]
+		[else (ormap (lambda (fs)(any-huge-files? fs size)) (dir-dirs rootfs))]))
+
+  
+
+
+(define (clean-directory alof)
+  (filter(lambda(a-file) (> (file-size a-file)0)) alof))
+
+
 ;;find-file-path: dir file-> list[string]
 ;; consumes a directory and a file returns either,
 ;; false if the file is not in the directory or,
@@ -81,10 +95,8 @@
    (cond[(not(contains rootfs a-file)) false]
         [else
          (map dir-name (
-
 ;;file-names-satisfying
 
-;;files-containing ^^^^ using above
 
 ;;  ======================
 ;;  || Helper Functions ||
