@@ -1,3 +1,6 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname hwk3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 #!/usr/bin/racket
 #lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
@@ -61,20 +64,18 @@
 ;;  =======================
 
 
-(define (any-huge-files? anum alof)
-  (not(empty? (filter(lambda(elt) (> elt anum))(map file-size alof)))))
+;;find-file-path: dir file-> list[string]
+;; consumes a directory and a file returns either,
+;; false if the file is not in the directory or,
+;; a list of directory names for the path to the file
+(define (find-file-path rootfs a-file)
+   (cond[(not(contains rootfs a-file)) false]
+        [else
+         (map dir-name (
 
-
-(define (clean-directory alof)
-  (filter(lambda(a-file) (> (file-size a-file)0)) alof))
-
-
-#|(check-expect (find-file-path beta CS1) (list "beta"))
-(define (find-file-path alof a-file)
-  (map file-name (
-|#
 ;;file-names-satisfying
 
+;;files-containing ^^^^ using above
 
 ;;  ======================
 ;;  || Helper Functions ||
