@@ -61,9 +61,9 @@
 					(make-dir "dir3" empty empty))
 				  (list
 				  	(make-file "the" 5000000000000 "racket")
-					(make-file "-based" 5 "filesystem!")
-					(make-file "...Use" 4 "btrfs")
-					(make-file "instead!" 3 "nope."))))
+					(make-file "-based" 0 "filesystem!")
+					(make-file "...Use" 0 "btrfs")
+					(make-file "instead!" 0 "nope."))))
 
 ;;  =======================
 ;;  || PRIMARY FUNCTIONS ||
@@ -71,7 +71,7 @@
 
 
 ;; any-huge-files? dir number -> boolean
-;; Consumes a filesystem (starting at the given root directory, returns true
+;; Consumes a filesystem (starting at the given root directory), returns true
 ;; if there are files within it that exceed the given size.
 (check-expect (any-huge-files? MISC-DIR 5000) true)
 (check-expect (any-huge-files? CS1102-DIR 190000) false)
@@ -80,12 +80,22 @@
 	(cond 	[(not (empty? (filter (lambda (x)(> (file-size x) size)) (dir-files rootfs)))) true]
 		[else (ormap (lambda (fs)(any-huge-files? fs size)) (dir-dirs rootfs))]))
 
-  
 
-
-(define (clean-directory alof)
-  (filter(lambda(a-file) (> (file-size a-file)0)) alof))
-
+;; clean-directory: dir -> dir
+;; Consumes a filesystem (starting at the given root directory), returns
+;; the same filesystem but with files of size 0 removed.
+;; NOTE: WHEN RUNNING DIRECTLY OR RUNNING WITHOUT "Intermediate student with lambda"
+;; THIS TEST CASE WILL THROW AN ERROR! THIS IS BIZARRELY NORMAL!
+(check-expect (clean-directory MISC-DIR) (make-dir "misc" (list
+								(make-dir "dir1" empty empty)
+								(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
+								(make-dir "dir3" empty empty))
+							  (list (make-file "the" 5000000000000 "racket"))))
+(define (clean-directory rootfs)
+	(make-dir (dir-name rootfs)
+		  (map clean-directory (dir-dirs rootfs))
+		  (filter (lambda (f)(> (file-size f) 0)) (dir-files rootfs))))
+			
 
 ;;find-file-path: dir file-> list[string]
 ;; consumes a directory and a file returns either,
