@@ -10,7 +10,7 @@
 
 
 ;; A file is (make-file string number string)
-(define-struct file (name size contents)
+(define-struct file (name size contents))
 ;; Template:
 ;  (define (file-func a-file)
 ;	...(file-name a-file)...
@@ -45,13 +45,13 @@
 			(make-dir "1-Diff" (list (make-file "diff.rkt" 12000 "WE'RE DYING UNDER PARENS")) empty)
 			(make-dir "2-Firegame" 	(list
 							(make-dir "build" empty empty)
-							(make-dir "Hydra-Engine" empty empty)))	;;Hail Hydra!
+							(make-dir "Hydra-Engine" empty empty))	;;Hail Hydra!
 						(list 
 							(make-file "HW2.rkt" 180000 "Why didn't we use filter or map?!")
 							(make-file "HW2 my version.rkt" 164000 "what have we done?")
 							(make-file "lg-fire.gif" 4000 "GIF89.d.d")
 							(make-file "med-fire.gif" 4000 "GIF89.d.d")	;;These three are cool. Thank goodness for hex editors!
-							(make-file "sm-fire.gif" 4000 "GIF89.d.d")?)
+							(make-file "sm-fire.gif" 4000 "GIF89.d.d")))
 			(make-dir "3-Filesystem" empty (list
 							(make-file "hwk3.rkt" 666 "NO WAIT DON'T RECURSE THAT DEEP-*boom*"))))
 					empty))
