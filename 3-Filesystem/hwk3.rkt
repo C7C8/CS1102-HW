@@ -1,8 +1,5 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname hwk3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 #!/usr/bin/racket
-;;#lang racket				;; These three lines are required to run the program without DrRacket
+#lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
 
 
@@ -68,6 +65,8 @@
 					(make-file "...Use" 0 "btrfs")
 					(make-file "instead!" 0 "nope."))))
 
+
+
 ;;  =======================
 ;;  || PRIMARY FUNCTIONS ||
 ;;  =======================
@@ -112,12 +111,25 @@
          (cons(dir-name rootfs)(map dir-name (filter(lambda(f) (contains-file? f (file-name a-file))) (dir-dirs rootfs))))]       
       [(contains-file? rootfs (file-name a-file)) (list(dir-name rootfs))]
       [else false]))              
-;;file-names-satisfying
+
+
+;; file-names-satisfying: (file -> boolean) dir -> list[string]
+;; Consumes a filesystem (given by a root directory), returns a list
+;; of filenames whose respective files yielded a "true" result from the
+;; function passed in as the first argument.
+(check-expect (file-names-satisfying (lambda (f)(string=? "the" (file-name f))) MISC-DIR) (list "the"))
+(check-expect (file-names-satisfying (lambda (f)(string=? "GIF89.d.d" (file-contents f))) CS1102-DIR) (list "lg-fire.gif" "med-fire.gif" "sm-fire.gif"))
+(define (file-names-satisfying func rootfs)
+		(append*
+			(map file-name (filter func (dir-files rootfs)))
+			(map (lambda (d)(file-names-satisfying func d)) (dir-dirs rootfs))))
+
 
 
 ;;  ======================
 ;;  || Helper Functions ||
 ;;  ======================
+
 
 ;; contains-file? dir string -> boolean
 ;; Consumes a filesystem (given as a root directory) and a filename,
@@ -130,5 +142,5 @@
 		(ormap (lambda (fs)(contains-file? fs filename)) (dir-dirs rootfs))))
 	
 
-;;(test)
+(test)
 
