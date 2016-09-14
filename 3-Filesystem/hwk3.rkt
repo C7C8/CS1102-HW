@@ -1,5 +1,8 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname hwk3) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 #!/usr/bin/racket
-#lang racket				;; These three lines are required to run the program without DrRacket
+;;#lang racket				;; These three lines are required to run the program without DrRacket
 (require test-engine/racket-tests)
 
 
@@ -101,10 +104,14 @@
 ;; consumes a directory and a file returns either,
 ;; false if the file is not in the directory or,
 ;; a list of directory names for the path to the file
+(check-expect (find-file-path MISC-DIR (make-file "lallALA" 0 "not a file")) false)
+(check-expect (find-file-path MISC-DIR (make-file "...Use" 0 "btrfs")) (list "misc")) 
+(check-expect (find-file-path CS1102-DIR (make-file "diff.rkt" 12000 "WE'RE DYING UNDER PARENS")) (list "CS 1102" "1-Diff"))
 (define (find-file-path rootfs a-file)
-   (cond[(not(contains rootfs a-file)) false]
-        [else
-         (map dir-name (
+ (cond[(cons? (map dir-name (filter(lambda(f) (contains-file? f (file-name a-file))) (dir-dirs rootfs))))
+         (cons(dir-name rootfs)(map dir-name (filter(lambda(f) (contains-file? f (file-name a-file))) (dir-dirs rootfs))))]       
+      [(contains-file? rootfs (file-name a-file)) (list(dir-name rootfs))]
+      [else false]))              
 ;;file-names-satisfying
 
 
@@ -123,5 +130,5 @@
 		(ormap (lambda (fs)(contains-file? fs filename)) (dir-dirs rootfs))))
 	
 
-(test)
+;;(test)
 
