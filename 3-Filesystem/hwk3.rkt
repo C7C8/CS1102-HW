@@ -1,6 +1,7 @@
 #!/usr/bin/racket
-#lang racket				;; These three lines are required to run the program without DrRacket
+;#lang racket
 (require test-engine/racket-tests)
+(require racket/list)
 
 
 
@@ -45,12 +46,12 @@
 			(make-dir "1-Diff" empty (list (make-file "diff.rkt" 12000 "WE'RE DYING UNDER PARENS")))
 			(make-dir "2-Firegame" 	(list
 							(make-dir "build" empty empty)
-							(make-dir "Hydra-Engine" empty empty))	;;Hail Hydra!
+							(make-dir "Hydra-Engine" empty empty))
 						(list 
 							(make-file "HW2.rkt" 180000 "Why didn't we use filter or map?!")
 							(make-file "HW2 my version.rkt" 164000 "what have we done?")
 							(make-file "lg-fire.gif" 4000 "GIF89.d.d")
-							(make-file "med-fire.gif" 4000 "GIF89.d.d")	;;These three are cool. Thank goodness for hex editors!
+							(make-file "med-fire.gif" 4000 "GIF89.d.d")
 							(make-file "sm-fire.gif" 4000 "GIF89.d.d")))
 			(make-dir "3-Filesystem" empty (list
 							(make-file "hwk3.rkt" 666 "NO WAIT DON'T RECURSE THAT DEEP-*boom*"))))
@@ -88,18 +89,18 @@
 ;; the same filesystem but with files of size 0 removed.
 ;; NOTE: WHEN RUNNING DIRECTLY OR RUNNING WITHOUT "Intermediate student with lambda"
 ;; THIS TEST CASE WILL THROW AN ERROR! THIS IS BIZARRELY NORMAL!
-;(check-expect (clean-directory MISC-DIR) (make-dir "misc" (list
-;								(make-dir "dir1" empty empty)
-;								(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
-;								(make-dir "dir3" empty empty))
-;							  (list (make-file "the" 5000000000000 "racket"))))
+(check-expect (clean-directory MISC-DIR) (make-dir "misc" (list
+								(make-dir "dir1" empty empty)
+								(make-dir "dir2" empty (list (make-file "Introducing" 50000000 "rtfs,")))
+								(make-dir "dir3" empty empty))
+							  (list (make-file "the" 5000000000000 "racket"))))
 (define (clean-directory rootfs)
 	(make-dir (dir-name rootfs)
 		  (map clean-directory (dir-dirs rootfs))
 		  (filter (lambda (f)(> (file-size f) 0)) (dir-files rootfs))))
 			
 
-;;find-file-path: dir file-> list[string]
+;; find-file-path: dir file-> list[string]
 ;; consumes a directory and a file returns either,
 ;; false if the file is not in the directory or,
 ;; a list of directory names for the path to the file
@@ -125,6 +126,15 @@
 			(map (lambda (d)(file-names-satisfying func d)) (dir-dirs rootfs))))
 
 
+;; files-containing: dir string -> list[strings]
+;; Consumes a directory and a value, returns a list of filenames
+;; that have the given value as their contents.
+(check-expect (files-containing CS1102-DIR "GIF89.d.d") (list "lg-fire.gif" "med-fire.gif" "sm-fire.gif"))
+(check-expect (files-containing CS1102-DIR "This doesn't exist") empty)
+(define (files-containing rootfs val)
+	(file-names-satisfying (lambda (f)(string=? val (file-contents f))) rootfs))
+
+
 
 ;;  ======================
 ;;  || Helper Functions ||
@@ -140,7 +150,4 @@
 	(or 
 		(cons? (filter (lambda (f)(string=? filename (file-name f))) (dir-files rootfs)))
 		(ormap (lambda (fs)(contains-file? fs filename)) (dir-dirs rootfs))))
-	
-
-(test)
 
