@@ -20,14 +20,31 @@
 ;; -a symbol,
 ;; -(make-PRINT-SECTION-RESULTS string)
 ;; -(make-PRINT string),
-;; -(make-IF-RESULTS number string list[cmd] list[cmd]),
+;; -(make-IF-RESULTS number string list[cmd] list[cmd]),	-- If the student's current grade <= IF-RESULTs, ctrue, else cfalse.
 ;; -(make-ASK-QUESTION question)
 ;; -(make-SECTION string list[cmd])
-(define-struct PRINT-SECTION-RESULTS (section-name))
+
+
 (define PRINT-EXAM-RESULTS 'per)
+
+
+;; A PRINT-SECTION-RESULTS is (make-PRINT-SECTION-RESULTS string)
+(define-struct PRINT-SECTION-RESULTS (section-name))
+
+
+;; A PRINT is (make-PRINT string)
 (define-struct PRINT (msg))				
+
+
+;; A IF-RESULTS is (make-IF-RESULTS name list[cmd] list[cmd])
 (define-struct IF-RESULTS (bounds section-name ctrue cfalse))    ;;the student's current score in specified section is compared to bounds. If less-or-equal to bounds, ctrue; else, cfalse.
+
+
+;; A ASK-QUESTION is (make-ASK-QUESTION question)
 (define-struct ASK-QUESTION (question))
+
+
+;; A SECTION is (make-SECTION string list[cmd])
 (define-struct SECTION (name cmds))
 
 
