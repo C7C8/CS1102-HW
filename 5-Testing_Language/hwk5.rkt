@@ -72,3 +72,19 @@
 		(make-PRINT-SECTION-RESULTS "fractions")))
 	  
 
+;; WPI History Exam
+(define exam-wpihistory
+  	(let 	([q1 (make-question "When was WPI founded?" "1865")]
+		 [q2 (make-question "What is Gompei?" "goat")]
+		 [q3 (make-question "Who was the first president of WPI?: (1) Boynton, (2) Washburn, (3) Thompson" "3")]
+		 [q4 (make-question "Name one of the two towers behind a WPI education." "boynton")])
+	  (list
+		(make-ASK-QUESTION q1)
+		(make-PRINT "Let's see if you know your WPI personalities.")
+		(make-SECTION "personalities" (list
+						(make-ASK-QUESTION q2)
+						(make-ASK-QUESTION q3)
+						(make-PRINT-SECTION-RESULTS "personalities")))
+		(make-ASK-QUESTION q4)
+		PRINT-EXAM-RESULTS
+		(make-PRINT "There's some more WPI history on the web. And life."))))
