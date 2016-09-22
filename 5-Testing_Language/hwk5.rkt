@@ -22,13 +22,13 @@
 ;; -a symbol,
 ;; -(make-PRINT-SECTION-RESULTS string)
 ;; -(make-PRINT string),
-;; -(make-IF-RESULTS number list[cmd] list[cmd]),
+;; -(make-IF-RESULTS number string list[cmd] list[cmd]),
 ;; -(make-ASK-QUESTION question)
 ;; -(make-SECTION string list[cmd])
 (define-struct PRINT-SECTION-RESULTS (section-name))
 (define PRINT-EXAM-RESULTS 'per)
 (define-struct PRINT (msg))				
-(define-struct IF-RESULTS (bounds ctrue cfalse))	;;the student's current score is compared to bounds. If less-or-equal to bounds, ctrue; else, cfalse.
+(define-struct IF-RESULTS (bounds section-name ctrue cfalse))    ;;the student's current score in specified section is compared to bounds. If less-or-equal to bounds, ctrue; else, cfalse.
 (define-struct ASK-QUESTION (question))
 (define-struct SECTION (name cmds))
 
@@ -43,7 +43,7 @@
 
 
 ;; Student #1 Exam:
-(define exam-s1
+(define math-exam
   	(let 	([q1 (make-question "What is 3*4+2?" "14")]
 	  	 [q2 (make-question "What is 2+3*4?" "14")]
 		 [q3 (make-question "What is 5+2*6?" "17")]
@@ -55,16 +55,20 @@
 					(make-ASK-QUESTION q1)
 					(make-ASK-QUESTION q2)
 					(make-ASK-QUESTION q3)
-					(make-IF-RESULTS 50
+					(make-IF-RESULTS 50 "arithmetic"
 							 	(list
 								  	(make-PRINT "You seem to be having trouble with these. Try again.")
 									(make-ASK-QUESTION q4))
 								empty)))
 		(make-SECTION "fractions" (list
 					(make-ASK-QUESTION q5)))
-		(make-SECTION "arithmetic" (list
-					(make-ASK-QUESTION q6)))
+		(make-SECTION "arithmetic"(list
+                                        (make-IF-RESULTS 50 "arithmetic"
+							 	(list
+								  	 empty
+									(make-ASK-QUESTION q6))
+								empty))))
 		(make-PRINT-SECTION-RESULTS "arithmetic")
-		(make-PRINT-SECTION-RESULTS "fractions"))))
+		(make-PRINT-SECTION-RESULTS "fractions")))
 	  
 
