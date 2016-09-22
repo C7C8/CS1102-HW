@@ -12,10 +12,8 @@
 ;; ==============================
 
 
-;; A question is (make-question string string number)
-;; "Limit" is the minimum percentage needed for the student to be
-;; asked this question.
-(define-struct question (question answer))
+;; A question is (make-question string list[string])
+(define-struct question (question answers))
 
 
 ;; A cmd is either
@@ -44,12 +42,12 @@
 
 ;; Student #1 Exam:
 (define math-exam
-  	(let 	([q1 (make-question "What is 3*4+2?" "14")]
-	  	 [q2 (make-question "What is 2+3*4?" "14")]
-		 [q3 (make-question "What is 5+2*6?" "17")]
-	 	 [q4 (make-question "What is 3+5*2?" "13")]
-		 [q5 (make-question "What is the reduced form of 12/18?: (1) 6/9  (2) 1/1.5  (3) 2/3" "3")]
-		 [q6 (make-question "What is 8+3*2" "14")])
+  	(let 	([q1 (make-question "What is 3*4+2?" (list "14"))]
+	  	 [q2 (make-question "What is 2+3*4?" (list "14"))]
+		 [q3 (make-question "What is 5+2*6?" (list "17"))]
+	 	 [q4 (make-question "What is 3+5*2?" (list "13"))]
+		 [q5 (make-question "What is the reduced form of 12/18?: (1) 6/9  (2) 1/1.5  (3) 2/3" (list "3"))]
+		 [q6 (make-question "What is 8+3*2" (list "14"))])
 	  (list
 	    	(make-SECTION "arithmetic" (list
 					(make-ASK-QUESTION q1)
@@ -67,17 +65,17 @@
 							 	(list
 								  	 empty
 									(make-ASK-QUESTION q6))
-								empty))))
+								empty)))
 		(make-PRINT-SECTION-RESULTS "arithmetic")
-		(make-PRINT-SECTION-RESULTS "fractions")))
+		(make-PRINT-SECTION-RESULTS "fractions"))))
 	  
 
 ;; WPI History Exam
 (define exam-wpihistory
-  	(let 	([q1 (make-question "When was WPI founded?" "1865")]
-		 [q2 (make-question "What is Gompei?" "goat")]
-		 [q3 (make-question "Who was the first president of WPI?: (1) Boynton, (2) Washburn, (3) Thompson" "3")]
-		 [q4 (make-question "Name one of the two towers behind a WPI education." "boynton")])
+  	(let 	([q1 (make-question "When was WPI founded?" (list "1865"))]
+		 [q2 (make-question "What is Gompei?" (list "goat"))]
+		 [q3 (make-question "Who was the first president of WPI?: (1) Boynton, (2) Washburn, (3) Thompson" (list "3"))]
+		 [q4 (make-question "Name one of the two towers behind a WPI education." (list "boynton" "wasburn"))])
 	  (list
 		(make-ASK-QUESTION q1)
 		(make-PRINT "Let's see if you know your WPI personalities.")
