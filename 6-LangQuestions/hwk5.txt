@@ -1,8 +1,6 @@
-;;===========================================
-;; || Christopher Myers and Michael Krebs ||
-;;===========================================
-
-#|
+===========================================
+ || Christopher Myers and Michael Krebs ||
+===========================================
 ____________________
 
  QUESTION 1
@@ -63,8 +61,29 @@ ____________________
  QUESTION 3
 ____________________
 
+a) Our chosen language is the language is the language obeyed by students
+   in a cafeteria.
 
+b) The community of people is all students who have access to the cafeteria
+   who want to eat.
 
+c) Programs are lists of instructions on what food to get.
 
+d) Data is the names of food items to (potentially) acquire. Operations are
+   what to do with those food items (e.g. check if there's any left, check the
+   freshness, etc.), and control is just simple if statements based on predefined
+   functions that represent preferences (eg. "if cookies are fresh...")
 
-|#
+e) The language syntax is series of commands concerning food items that are
+   largely defined by food availability and individual preferences. Ultimately,
+   all programs end with eating.
+
+f) "Data values" in this language are strings. However, creative interpretation of
+   this could result in data values from other senses, such as sight or smell.
+
+g) An interpreter for this program is simply a hungry student.
+
+h) This language could, in theory, be processed by a computer. However, a computer
+   would be unable to complete the last part of the language specification (eating).
+   If a computer was capable of completing this last step, we have far more to worry
+   about than language specifications.
