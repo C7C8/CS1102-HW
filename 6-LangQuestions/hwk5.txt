@@ -78,7 +78,7 @@ e) The language syntax is series of commands concerning food items that are
    largely defined by food availability and individual preferences. Ultimately,
    all programs end with eating.
 
-f) The "Data values" in this language are strings. However, creative interpretation of
+f) The "data values" in this language are strings. However, creative interpretation of
    this could result in data values from other senses, such as sight or smell.
 
 g) An interpreter for this language is simply a hungry student.
