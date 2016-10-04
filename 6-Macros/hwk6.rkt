@@ -17,7 +17,9 @@
      (lambda (var ...)
        (lambda (message)
          (cond [(symbol=? message 'mname) ; M'Function *tips parameter*
-                (lambda (mparam ...) mfunc)] ...)))]))
+                (lambda (mparam ...) mfunc)] ...
+	       [else
+		 (error (format "Function name not defined: ~a~n" (symbol->string message)))])))]))
 (define-syntax send
   (syntax-rules ()
     [(send obj funcname params ...)
@@ -29,10 +31,12 @@
     (method longer-than? (len) (> length len))
     (method run-over () (dillo-class (+ length 1) true))))
 
+(define zero-class    ; Demonstrates that a class with no methods and no
+  (class (initvars))) ; vars still works flawlessly.
+
 (define d3 (dillo-class 5 false))
 (send d3 longer-than? 6)
 (send d3 longer-than? 5)
 (define d4 (send d3 run-over))
 (send d4 longer-than? 5)
-
- 
+;(send d3 run-dover) ; Generates error "Function not defined: run-dover" 
