@@ -50,13 +50,14 @@ Post-macro OO code:
 (define-syntax class
   (syntax-rules ()
     [(class (initvars var ...)
-       (method mname (mparam ...) mfunc)) ; M' Function *tips pointer*
+       (method mname (mparam ...) mfunc) ... )
 
      (lambda (var ...)
        (lambda (message)
-         (cond [(symbol=? message mname)
-                (lambda (mparam ...) mfunc)])))]))
+         (cond [(symbol=? message mname) ; M'Function *tips parameter*
+                (lambda (mparam ...) mfunc)] ...)))]))
 
 
 (class (initvars length dead?)
-  (method longer-than? (len) (> length len)))
+  (method longer-than? (len) (> length len))
+  (method run-over () (printf "Hello, world!")))
