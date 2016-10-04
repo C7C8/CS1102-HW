@@ -49,12 +49,14 @@ Post-macro OO code:
 
 (define-syntax class
   (syntax-rules ()
-    [(class (initvars var ...))
+    [(class (initvars var ...)
+       (method mname (mparam ...) mfunc)) ; M' Function *tips pointer*
+
      (lambda (var ...)
        (lambda (message)
-         (cond [true (printf "Yay!")]
-               [false (printf "aww!")])))]))
+         (cond [(symbol=? message mname)
+                (lambda (mparam ...) mfunc)])))]))
 
 
-(define dillo-class
-  (class (initvars length dead?)))
+(class (initvars length dead?)
+  (method longer-than? (len) (> length len)))
