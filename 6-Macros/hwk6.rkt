@@ -54,10 +54,11 @@ Post-macro OO code:
 
      (lambda (var ...)
        (lambda (message)
-         (cond [(symbol=? message mname) ; M'Function *tips parameter*
+         (cond [(symbol=? message 'mname) ; M'Function *tips parameter*
                 (lambda (mparam ...) mfunc)] ...)))]))
 
-
-(class (initvars length dead?)
-  (method longer-than? (len) (> length len))
-  (method run-over () (printf "Hello, world!")))
+(define dillo-class
+  (class (initvars length dead?)
+    (method longer-than? (len) (> length len))
+    (method run-over () (dillo-class (+ length 1) true))))
+  
