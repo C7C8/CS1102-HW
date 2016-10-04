@@ -36,13 +36,31 @@ Pre-macro OO code:
 Post-macro OO code:
 |#
 
-(define dillo-class
-  (class (initvars length dead?)
-    (method longer-than? (len) (> length len))
-    (method run-over () (dillo-class (+ length 1) true))))
+#|(define dillo-class
+    (class (initvars length dead?)
+      (method longer-than? (len) (> length len))
+      (method run-over () (dillo-class (+ length 1) true))))
 
 (define d3 (dillo-class 5 false))
 (send d3 longer-than? 6)
 (send d3 longer-than? 5)
 (define d4 (send d3 run-over))
-(send d4 longer-than? 5)
+(send d4 longer-than? 5)|#
+
+(define-syntax class
+  (syntax-rules ()
+    [(class (var ...)
+       (method mname (param ...) (func))
+       ...)
+
+     (lambda (var ...)
+       (lambda (msg)
+         (cond [(symbol=? msg mname)
+                (lambda (param ...)  (func))]
+               ...)))]))
+
+
+(define dillo-class
+  (class (length dead?)
+    (method longer-than? (len) (> length len))
+    (method run-over () (dillo-class (+ length 1) true))))
