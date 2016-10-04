@@ -51,14 +51,22 @@ Post-macro OO code:
   (syntax-rules ()
     [(class (initvars var ...)
        (method mname (mparam ...) mfunc) ... )
-
      (lambda (var ...)
        (lambda (message)
          (cond [(symbol=? message 'mname) ; M'Function *tips parameter*
                 (lambda (mparam ...) mfunc)] ...)))]))
 
+(define-syntax send
+  (syntax-rules ()
+    [(send obj funcname params)
+
+     ((obj 'funcname) params)]))
+
 (define dillo-class
   (class (initvars length dead?)
     (method longer-than? (len) (> length len))
     (method run-over () (dillo-class (+ length 1) true))))
+
+(define d3 (dillo-class 5 false))
+(send d3 longer-than? 6)
   
