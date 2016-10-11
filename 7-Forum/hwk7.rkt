@@ -79,7 +79,7 @@
      (html-page "Post Preview"
                 (list 'h1 "Preview submission")
                 (list 'br)
-                "Preview your submission here. Press \"back\" to change your
+               "Preview your submission here. Press \"back\" to change your
                submission or \"submit\" to submit. Be careful, there is no
                editing or deleting posts!"
                 (list 'br)
@@ -92,7 +92,7 @@
                 (list 'form
                       (list 'button (list
                                          (list 'value "Submit")
-                                         (list 'formaction "localhost:8080/main")
+                                         (list 'formaction "http://localhost:8080/accept")
                                          (list 'target "_blank")
                                          (list 'type "submit")))
                       (list 'input (list (list 'type "hidden")
@@ -105,6 +105,18 @@
                                          (list 'name "author")
                                          (list 'value AUTHOR)))))
      false)))
+
+(define-script (accept form cookies)
+  (let ([AUTHOR (cdr (assoc 'author form))]
+        [TITLE (cdr (assoc 'title form))]
+        [BODY (cdr (assoc 'body form))])
+    (begin
+      (add-post (make-post AUTHOR TITLE BODY))
+      (values
+       (html-page "Success!"
+                  (list 'h1 "Your post has been submitted!")
+                  (string->xexpr "<a href=\"http://localhost:8080/main\">Click here to return to the main page.</a>"))
+       false))))
 
 (test)
 (server 8080)
