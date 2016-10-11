@@ -55,7 +55,7 @@
               (list 'h1 "Authoring Page")
               (format "Write your name and post below")
               (append (list 'form 
-                            (list (list 'action "http://localhost:8088/preview")
+                            (list (list 'action "http://localhost:8080/preview")
                                   (list 'target "_blank")))
                       (list (list 'br)
                             "Name:" (list 'input (list (list 'type "text") (list 'name "Name")))
@@ -88,7 +88,23 @@
                 (string-append "Author: " AUTHOR)
                 (list 'br)
                 (list 'h3 TITLE)
-                (list 'p (xexpr->string BODY)))
+                (list 'p (xexpr->string BODY))
+                (list 'form
+                      (list 'button (list
+                                         (list 'value "Submit")
+                                         (list 'formaction "localhost:8080/main")
+                                         (list 'target "_blank")
+                                         (list 'type "submit")))
+                      (list 'input (list (list 'type "hidden")
+                                         (list 'name "title")
+                                         (list 'value TITLE)))
+                      (list 'input (list (list 'type "hidden")
+                                         (list 'name "body")
+                                         (list 'value BODY)))
+                      (list 'input (list (list 'type "hidden")
+                                         (list 'name "author")
+                                         (list 'value AUTHOR)))))
      false)))
 
 (test)
+(server 8080)
