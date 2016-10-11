@@ -46,6 +46,8 @@
    (html-page "Main Page"
               (list 'h1 "Racket Forum")
               (list 'br)
+              "Welcome to the Racket Forum, the world's most vulnerable forum! Try injecting arbitrary HTML, it works amazingly!"
+              " Better yet, feel free to crash the server by submitting bad arguments to it!"
               (string->xexpr (posts->string mem))
               (append (list 'form 
                             (list (list 'action "http://localhost:8080/author")))
@@ -67,7 +69,8 @@
                             "Title:"(list 'input (list (list 'type "text") (list 'name "Title")))
                             (list 'br)
                             (list 'br)
-                            "Post:"(list 'input (list (list 'type "text") (list 'name "Post")))
+                            "Post:"(list 'textarea
+                                         (list 'name "Post"))
                             (list 'br)
                             (list 'br)
                             (list 'input (list (list 'type "submit") (list 'value "Preview"))))))
