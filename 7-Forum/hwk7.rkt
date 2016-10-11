@@ -69,19 +69,26 @@
                             (list 'br)
                             (list 'input (list (list 'type "submit") (list 'name "Preview"))))))
    false))
-#|
-(define-script (preview form cookies)
-  (let ([AUTHOR (cdr (assoc 'name form))]
-        
-        
-  (values
-   (html-page "preview"
-              (list 'h1 "Preview")
-                (append (list 'form 
-                            (list (list 'action "http://localhost:8088/main")
-                                  (list 'target "_blank")))
-                        (list (list 'input (list(list 'type "submit") (list 'value "Submit"))))))
-   false))|#
 
+
+(define-script (preview form cookies)
+  (let ([AUTHOR (cdr (assoc 'Name form))]
+        [TITLE (cdr (assoc 'Title form))]
+        [BODY (cdr (assoc 'Post form))])
+    (values
+     (html-page "Post Preview"
+                (list 'h1 "Preview submission")
+                (list 'br)
+                "Preview your submission here. Press \"back\" to change your
+               submission or \"submit\" to submit. Be careful, there is no
+               editing or deleting posts!"
+                (list 'br)
+                (list 'br)
+                (list 'p )
+                (string-append "Author: " AUTHOR)
+                (list 'br)
+                (list 'h3 TITLE)
+                (list 'p (xexpr->string BODY)))
+     false)))
 
 (test)
