@@ -17,6 +17,7 @@
                   (make-post "mjkrebs" "Test pos2" "Test conten2")
                   (make-post "dillo" "[no title]" "DEAD")))
 
+;; Add a post to memory. No check-expects as it uses a set!.
 (define (add-post npost)
   (set! mem (cons npost mem)))
 
@@ -24,15 +25,15 @@
 ;; post->string: post -> string
 ;; Does what it says on the box.
 (check-expect (post->string (make-post "crmyers" "Test post" "Test content"))
-              "crmyers      Test post      Test content<br/>")
+              "<i>By crmyers</i><br/><h3>Test post</h3><p>Test content</p><br/><br/>")
 (define (post->string pst)
-  (string-append (post-author pst) "      " (post-title pst) "      " (post-body pst) "<br/>"))
+  (string-append "<i>By " (post-author pst) "</i><br/><h3>" (post-title pst) "</h3><p>" (post-body pst) "</p><br/><br/>"))
 
 ;; posts->string: list[post] -> string
 ;; Also does what it says on the box. Turns a list of posts into strings!
 (check-expect (posts->string (list (make-post "crmyers" "Test post" "Test content")
                              (make-post "mjkrebs" "Test pos2" "Test conten2")))
-  "<p>crmyers      Test post      Test content<br/>mjkrebs      Test pos2      Test conten2<br/></p>")
+  "<p><i>By crmyers</i><br/><h3>Test post</h3><p>Test content</p><br/><br/><i>By mjkrebs</i><br/><h3>Test pos2</h3><p>Test conten2</p><br/><br/></p>")
 (define (posts->string pstlst)
   (string-append "<p>" (string-append* (map post->string pstlst)) "</p>"))
 
@@ -44,12 +45,10 @@
   (values 
    (html-page "Main Page"
               (list 'h1 "Racket Forum")
-              "Author         Title          Body"
               (list 'br)
               (string->xexpr (posts->string mem))
               (append (list 'form 
-                            (list (list 'action "http://localhost:8080/author")
-                                  (list 'target "_blank")))
+                            (list (list 'action "http://localhost:8080/author")))
                       (list (list 'input (list (list 'type "submit")(list 'value "Add New Post"))))))
    false))
 
@@ -99,6 +98,10 @@
                                          (list 'target "_blank")
                                          (list 'type "submit"))
                             "Submit Post")
+                       (list 'button (list
+                                         (list 'formaction "http://localhost:8080/author")
+                                         (list 'type "submit"))
+                            "Cancel")
                       (list 'input (list (list 'type "hidden")
                                          (list 'name "title")
                                          (list 'value TITLE)))
