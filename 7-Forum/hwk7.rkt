@@ -46,7 +46,11 @@
               (list 'h1 "Racket Forum")
               "Author         Title          Body"
               (list 'br)
-              (string->xexpr (posts->string mem)))
+              (string->xexpr (posts->string mem))
+              (append (list 'form 
+                            (list (list 'action "http://localhost:8080/author")
+                                  (list 'target "_blank")))
+                      (list (list 'input (list (list 'type "submit")(list 'value "Add New Post"))))))
    false))
 
 (define-script (author form cookies)
@@ -67,7 +71,7 @@
                             "Post:"(list 'input (list (list 'type "text") (list 'name "Post")))
                             (list 'br)
                             (list 'br)
-                            (list 'input (list (list 'type "submit") (list 'name "Preview"))))))
+                            (list 'input (list (list 'type "submit") (list 'value "Preview"))))))
    false))
 
 
