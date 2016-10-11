@@ -91,7 +91,7 @@
                 (string-append "Author: " AUTHOR)
                 (list 'br)
                 (list 'h3 TITLE)
-                (list 'p (xexpr->string BODY))
+                (string->xexpr (string-append "<p>" BODY "</p>"))
                 (list 'form
                       (list 'button (list
                                          (list 'formaction "http://localhost:8080/accept")
