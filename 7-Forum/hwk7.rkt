@@ -91,10 +91,10 @@
                 (list 'p (xexpr->string BODY))
                 (list 'form
                       (list 'button (list
-                                         (list 'value "Submit")
                                          (list 'formaction "http://localhost:8080/accept")
                                          (list 'target "_blank")
-                                         (list 'type "submit")))
+                                         (list 'type "submit"))
+                            "Submit Post")
                       (list 'input (list (list 'type "hidden")
                                          (list 'name "title")
                                          (list 'value TITLE)))
@@ -113,9 +113,11 @@
     (begin
       (add-post (make-post AUTHOR TITLE BODY))
       (values
-       (html-page "Success!"
-                  (list 'h1 "Your post has been submitted!")
-                  (string->xexpr "<a href=\"http://localhost:8080/main\">Click here to return to the main page.</a>"))
+       (html-page "Post submitted"
+                  (list 'h1 "Success!")
+                  (list 'p "Your post has been submitted!")
+                  (list 'a (list (list 'href "http://localhost:8080/main"))
+                        "Click here to return to the main page."))
        false))))
 
 (test)
